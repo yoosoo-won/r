@@ -31,7 +31,8 @@
         }
       ];
 
-      const statement = (invoice, plays) => {
+      const statement = (invoice, plays) => renderPlainText(invoice, plays);
+      const renderPlainText = (invoice, plays) => {
         /**
          * @param aPerformance
          * @returns {number}
@@ -70,8 +71,8 @@
           return result;
         };
         const usd = aNumber => new Intl.NumberFormat('en-US', {
-            style: 'currency', currency: 'USD', minimumFractionDigits: 2
-          }).format(aNumber/100);
+          style: 'currency', currency: 'USD', minimumFractionDigits: 2
+        }).format(aNumber/100);
         const totalVolumeCredits = () => {
           let result = 0;
           for (let perf of invoice.performances) {
