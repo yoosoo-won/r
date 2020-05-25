@@ -5,7 +5,7 @@ class PerformanceCalculator {
   }
   get amount() {
     let result = 0;
-    switch (this.performance.play.type) {
+    switch (this.play.type) {
       case 'tragedy': // 비극
         result = 40000;
         if (this.performance.audience > 30) {
@@ -22,6 +22,13 @@ class PerformanceCalculator {
       default:
         throw new Error (`알 수 없는 장르: ${this.play.type}`);
     }
+    return result;
+  }
+  get volumeCredits() {
+    let result = 0;
+    result += Math.max(this.performance.audience - 30, 0);
+    if ('comedy' === this.play.type)
+      result += Math.floor(this.performance.audience / 5);
     return result;
   }
 }
@@ -44,20 +51,13 @@ export default function createStatementData (invoice, plays) {
     const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
     const result = { ...aPerformance };
     result.play = calculator.play;
-    result.amount = amountFor(result);
-    result.volumeCredits = volumeCreditsFor(result);
+    result.amount = calculator.amount;
+    result.volumeCredits = calculator.volumeCredits;
     console.log('result', result);
     return result;
   };
   const amountFor = aPerformance =>
       new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-  const volumeCreditsFor = aPerformance => {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ('comedy' === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
-  };
   // const statementData = {...invoice};
   const statementData = {};
   statementData.customer = invoice.customer;
