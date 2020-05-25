@@ -32,6 +32,21 @@
       ];
 
       const statement = (invoice, plays) => {
+        const totalAmount = data => {
+          let result = 0;
+          for (let perf of data.performances) {
+            // 청구 내역을 출력한다.
+            result += perf.amount;
+          }
+          return result;
+        };
+        const totalVolumeCredits = data => {
+          let result = 0;
+          for (let perf of data.performances) {
+            result += perf.volumeCredits;
+          }
+          return result;
+        };
         const enrichPerformance = aPerformance => {
           const playFor = aPerformance => plays[aPerformance.playID];
           /**
@@ -74,42 +89,30 @@
           result.play = playFor(result);
           result.amount = amountFor(result);
           result.volumeCredits = volumeCreditsFor(result);
-          console.log(result);
+          console.log('result', result);
           return result;
         };
         // const statementData = {...invoice};
         const statementData = {};
         statementData.customer = invoice.customer;
         statementData.performances = invoice.performances.map(enrichPerformance);
+        statementData.totalAmount = totalAmount(statementData);
+        statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+        console.log('statementData', statementData);
         return renderPlainText(statementData, plays);
       };
       const renderPlainText = data => {
         const usd = aNumber => new Intl.NumberFormat('en-US', {
           style: 'currency', currency: 'USD', minimumFractionDigits: 2
         }).format(aNumber/100);
-        const totalVolumeCredits = () => {
-          let result = 0;
-          for (let perf of data.performances) {
-            result += perf.volumeCredits;
-          }
-          return result;
-        };
-        const totalAmount = () => {
-          let result = 0;
-          for (let perf of data.performances) {
-            // 청구 내역을 출력한다.
-            result += perf.amount;
-          }
-          return result;
-        };
 
         let result = `청구 내역 (고객명: ${data.customer})\n`;
         for (let perf of data.performances) {
           result += ` ${perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
         }
 
-        result += `총액: ${usd(totalAmount())}\n`;
-        result += `적립 포인트: ${totalVolumeCredits()}점\n`;
+        result += `총액: ${usd(data.totalAmount)}\n`;
+        result += `적립 포인트: ${data.totalVolumeCredits}점\n`;
         return result;
       };
 
