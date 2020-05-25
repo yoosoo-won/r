@@ -63,9 +63,17 @@
             }
             return result;
           };
+          const volumeCreditsFor = aPerformance => {
+            let result = 0;
+            result += Math.max(aPerformance.audience - 30, 0);
+            if ('comedy' === aPerformance.play.type)
+              result += Math.floor(aPerformance.audience / 5);
+            return result;
+          };
           const result = { ...aPerformance };
           result.play = playFor(result);
           result.amount = amountFor(result);
+          result.volumeCredits = volumeCreditsFor(result);
           console.log(result);
           return result;
         };
@@ -75,21 +83,14 @@
         statementData.performances = invoice.performances.map(enrichPerformance);
         return renderPlainText(statementData, plays);
       };
-      const renderPlainText = (data, plays) => {
-        const volumeCreditsFor = aPerformance => {
-          let result = 0;
-          result += Math.max(aPerformance.audience - 30, 0);
-          if ('comedy' === aPerformance.play.type)
-            result += Math.floor(aPerformance.audience / 5);
-          return result;
-        };
+      const renderPlainText = data => {
         const usd = aNumber => new Intl.NumberFormat('en-US', {
           style: 'currency', currency: 'USD', minimumFractionDigits: 2
         }).format(aNumber/100);
         const totalVolumeCredits = () => {
           let result = 0;
           for (let perf of data.performances) {
-            result += volumeCreditsFor(perf);
+            result += perf.volumeCredits;
           }
           return result;
         };
