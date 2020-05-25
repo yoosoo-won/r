@@ -32,21 +32,8 @@
       ];
 
       const statement = (invoice, plays) => {
-        const totalAmount = data => {
-          let result = 0;
-          for (let perf of data.performances) {
-            // 청구 내역을 출력한다.
-            result += perf.amount;
-          }
-          return result;
-        };
-        const totalVolumeCredits = data => {
-          let result = 0;
-          for (let perf of data.performances) {
-            result += perf.volumeCredits;
-          }
-          return result;
-        };
+        const totalAmount = data => data.performances.reduce((total, p) => total + p.amount, 0);
+        const totalVolumeCredits = data => data.performances.reduce((total, p) => total + p.volumeCredits, 0);
         const enrichPerformance = aPerformance => {
           const playFor = aPerformance => plays[aPerformance.playID];
           /**
