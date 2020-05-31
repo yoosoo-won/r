@@ -32,7 +32,7 @@
       ];
 
       invoices.forEach(invoice => {
-        document.querySelector('body').innerText = statement(invoice, plays);
+        document.querySelector('body').innerHTML = statement(invoice, plays);
         // 프로그램이 새로운 기능을 추가하기에 편한 구조가 아니라면, 먼저 기능을 추가하기 쉬운 형태로 리팩터링하고 나서 원하는 기능을 추가한다.
         /*
         기능을 추가하기에 불편하다면 기능 추하기가 쉽도록 형태로 리팩토링 후 원하는 기능을 추가한다.!!

@@ -34,6 +34,7 @@ const renderHtml = data => {
 };
 
 // 중간 데이터 생성을 관리
-export default function statement (invoice, plays) {
-  return renderPlainText(createStatementData(invoice, plays));
-}
+// export default function statement (invoice, plays) {
+//   return renderPlainText(createStatementData(invoice, plays));
+// }
+export default htmlStatement;
