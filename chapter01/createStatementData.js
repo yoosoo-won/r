@@ -13,9 +13,6 @@ class PerformanceCalculator {
         throw new Error (`알 수 없는 장르: ${this.play.type}`);
     }
   }
-  get volumeCredits() {
-    return Math.max(this.performance.audience - 30, 0);
-  }
 }
 
 class TragedyCalculator extends PerformanceCalculator {
@@ -74,8 +71,6 @@ export default function createStatementData (invoice, plays) {
     console.log('result', result);
     return result;
   };
-  const amountFor = aPerformance =>
-      new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
   // const statementData = {...invoice};
   const statementData = {};
   statementData.customer = invoice.customer;
