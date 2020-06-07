@@ -13,6 +13,9 @@ class PerformanceCalculator {
         throw new Error (`알 수 없는 장르: ${this.play.type}`);
     }
   }
+  get volumeCredits() {
+    return Math.max(this.performance.audience - 30, 0);
+  }
 }
 
 class TragedyCalculator extends PerformanceCalculator {
@@ -35,7 +38,7 @@ class ComedyCalculator extends PerformanceCalculator {
     return result;
   }
   get volumeCredits() {
-    return Math.floor(this.performance.audience / 5);
+    return super.volumeCredits + Math.floor(this.performance.audience / 5);
   }
 }
 
@@ -49,7 +52,7 @@ const createPerformanceCalculator = (aPerformance, aPlay) => {
 };
 
 export default function createStatementData (invoice, plays) {
-  console.log('createStatementData');
+  // console.log('createStatementData');
   const totalAmount = data =>
       data.performances.reduce((total, p) => total + p.amount, 0);
   const totalVolumeCredits = data =>
@@ -68,7 +71,7 @@ export default function createStatementData (invoice, plays) {
     result.play = calculator.play;
     result.amount = calculator.amount;
     result.volumeCredits = calculator.volumeCredits;
-    console.log('result', result);
+    // console.log('result', result);
     return result;
   };
   // const statementData = {...invoice};
